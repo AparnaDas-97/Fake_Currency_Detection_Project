@@ -151,7 +151,7 @@ def train_new():
         if not os.path.exists(target_dir):
           os.mkdir(target_dir)
         # Store the resultant image as 'sp_05.jpg'
-        cv2.imwrite('pre/p_'+str(a)+'.jpg', img)
+        cv2.imwrite('pre/p_'+str(a)+'.jpg', sp_05)
         data.append(np.array(img).flatten())
         ll=imgs.split(os.path.sep)[-2]
         lbl.append(int(ll))
@@ -162,10 +162,10 @@ def train_new():
     X_train, X_test, Y_train, Y_test = model_selection.train_test_split(x, y, test_size=0.25, random_state=7)
     print ("OK")
     svc = svm.SVC(kernel='linear', C=1.0)
-    svc.fit(x,y) #should change into X_train,Y_train
+    svc.fit(X_train,Y_train) #should change into X_train,Y_train
     knn = KNeighborsClassifier(n_neighbors=3) 
   
-    knn.fit(x,y) #should change into X_train,Y_train
+    knn.fit(X_train,Y_train) #should change into X_train,Y_train
     #print svc.score(X_train, Y_train)
 
     # save the model to disk
@@ -227,7 +227,7 @@ def testing():
     n=cv2.merge([cl,a,b])
     sp_05 = salt_pepper(0.5, img)
     
-    loaded_model = pickle.load(open('finalized_modelknn.sav', 'rb'))
+    loaded_model = pickle.load(open('finalized_modelsvm.sav', 'rb'))
     result= loaded_model.predict([np.array(img).flatten()])
     print (str(result[0]))
     if result[0]==0:
