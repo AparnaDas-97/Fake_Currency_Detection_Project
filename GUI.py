@@ -159,7 +159,7 @@ def train_new():
         a+=1
     x=np.array(data)
     y=np.array(lbl)
-    X_train, X_test, Y_train, Y_test = model_selection.train_test_split(x, y, test_size=0.25, random_state=7)
+    X_train, X_test, Y_train, Y_test = model_selection.train_test_split(x, y, test_size=0.3, random_state=7)
     print ("OK")
     svc = svm.SVC(kernel='linear', C=1.0)
     svc.fit(X_train,Y_train) #should change into X_train,Y_train
