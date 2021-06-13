@@ -34,7 +34,7 @@ def training():
     random.shuffle(img_path)
     data=[]
     lbl=[]
-    print img_path
+    print(img_path)
     for i,imgs in enumerate(img_path):
         img=cv2.imread(imgs,cv2.IMREAD_GRAYSCALE)
         img=cv2.resize(img,(500,500))
@@ -42,11 +42,11 @@ def training():
         data.append(np.array(img).flatten())
         l1=imgs.split(os.path.sep)[-2]
         lbl.append(l1)
-        print l1
+        print(l1)
     x=np.array(data)
     y=np.array(lbl)
     X_train, X_test, Y_train, Y_test = model_selection.train_test_split(x, y, test_size=0.25, random_state=7)
-    print "OK"
+    print("OK")
     svc = svm.SVC(kernel='linear', C=1.0)
     svc.fit(x,y)
     #print svc.score(X_train, Y_train)
@@ -54,14 +54,14 @@ def training():
     # save the model to disk
     filename = 'finalized.sav'
     pickle.dump(svc, open(filename, 'wb'))
-    print "Completed"
+    print("Completed")
 
     y_pred = svc.predict(X_test)
-    print "Confusion Matrix: \n", confusion_matrix(Y_test, y_pred)
-    print "Accuracy :\n",accuracy_score(Y_test,y_pred)*100
-    print"Report : \n", classification_report(Y_test, y_pred)
+    print("Confusion Matrix: \n", confusion_matrix(Y_test, y_pred))
+    print("Accuracy :\n",accuracy_score(Y_test,y_pred)*100)
+    print("Report : \n", classification_report(Y_test, y_pred))
     t2=time.time()
-    print "Time  :",t2-t1
+    print ("Time  :",t2-t1)
 ##    path = askopenfilename()
 ##    print path
 ##    img=cv2.imread(path,cv2.IMREAD_GRAYSCALE)

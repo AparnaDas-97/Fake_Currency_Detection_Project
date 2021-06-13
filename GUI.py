@@ -1,5 +1,7 @@
 from tkinter import *
 import sys
+from tkinter.filedialog import askopenfile
+
 import cv2
 import os
 import numpy as np
@@ -31,7 +33,20 @@ import random
 from sklearn.cross_decomposition import PLSCanonical
 from sklearn import svm
 import pickle
+
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 from sklearn.neighbors import KNeighborsClassifier
+
+
+def load():
+    global cimg
+    x1=[]
+    shw=cimg.copy()
+    shw=cv2.resize(shw,(500,500))
+    cv2.imshow("Selected vehicle",shw)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 def pp(a):
     global mylist
     mylist.insert(END, a)
@@ -186,6 +201,13 @@ def train_new():
     print(svc.score(X_test, Y_test))
     #----
 
+    ## newly added may cause error
+    y_pred = svc.predict(X_test)
+    print("Confusion Matrix: \n", confusion_matrix(Y_test, y_pred))
+    print("Accuracy :\n", accuracy_score(Y_test, y_pred) * 100)
+    print("Report : \n", classification_report(Y_test, y_pred))
+    ##
+
     root.after(500, lambda : pp("Data Set Loaded Properly."))
     
     root.after(1000, lambda : pp("All the datas are processing."))
@@ -200,10 +222,10 @@ def train_new():
 
 def testing():
     global lbl, txtdisplay
-    path =  filedialog.askopenfilename(initialdir = "C:/user/aparn/Downloads/",title = "choose your file")
+    path = filedialog.askopenfilename(initialdir="C:/user/aparn/Downloads/", title="choose your file")
     print (path)
     txtdisplay.insert(END, path)
-    img=cv2.imread(path)
+    img = cv2.imread(path)
     img=cv2.resize(img,(500,500))
     edges = cv2.Canny(img,100,200)
 
@@ -228,6 +250,7 @@ def testing():
     sp_05 = salt_pepper(0.5, img)
     
     loaded_model = pickle.load(open('finalized_modelsvm.sav', 'rb'))
+
     result= loaded_model.predict([np.array(img).flatten()])
     print (str(result[0]))
     if result[0]==0:
@@ -293,7 +316,9 @@ btntrn.place(x=150, y=160)
 
 
 lbli = Label(root, font=( 'aria' ,15, 'bold' ),text="Test Your Currency",bg="white",fg="black",bd=10,anchor='w')
+
 lbli.place(x=150,y=310)
+
 
 txtdisplay = Entry(root,font=('ariel' ,20,'bold') , bd=5 ,insertwidth=7 ,bg="white",justify='right')
 txtdisplay.place(x=80,y=350)
@@ -308,6 +333,10 @@ btntrn.place(x=400, y=350)
 
 lbl = Text(root, font=( 'aria' ,20, 'bold' ),bg="white",fg="black",bd=10, height=4, width=50)
 lbl.place(x=140,y=500)
+
+
+
+
 
 def qexit():
     root.destroy()
